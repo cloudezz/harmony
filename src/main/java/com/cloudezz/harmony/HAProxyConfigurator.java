@@ -39,7 +39,7 @@ public class HAProxyConfigurator {
   private void init() throws IOException {
     String HAProxyDefaultsFile = properties.getProperty("HAProxy.defaultsFile");
     if (HAProxyDefaultsFile != null) {
-      lbc = new HAProxyConfiguration(new FileInputStream(HAProxyDefaultsFile));
+      lbc = new HAProxyConfiguration(this.getClass().getResourceAsStream(HAProxyDefaultsFile));
     } else {
       lbc = new HAProxyConfiguration(this.getClass().getResourceAsStream("/HAProxyDefaults.conf"));
     }
