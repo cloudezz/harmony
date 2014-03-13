@@ -2,7 +2,6 @@ package com.cloudezz.harmony;
 
 
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,7 +18,7 @@ import com.cloudezz.harmony.management.ssh.SSHConnection;
  * This is partly a demo class - and also contains the SSH code to push the configuration to a front
  * end server.
  */
-public class HAProxyConfigurator {
+public class HarmonyConfigurator {
   private Properties properties;
   private SSHConnection connection;
   private HAProxyConfiguration lbc;
@@ -27,7 +26,7 @@ public class HAProxyConfigurator {
 
 
   /** Path to the properties file of where to find the config */
-  public HAProxyConfigurator(String parameterFile) throws Exception {
+  public HarmonyConfigurator(String parameterFile) throws Exception {
     properties = new Properties();
     FileInputStream in = new FileInputStream(parameterFile);
     properties.load(in);
@@ -46,7 +45,7 @@ public class HAProxyConfigurator {
 
   }
 
-  public HAProxyConfigurator(Properties props) throws Exception {
+  public HarmonyConfigurator(Properties props) throws Exception {
     properties = props;
     init();
   }
@@ -76,7 +75,6 @@ public class HAProxyConfigurator {
     try {
       output = getConnection().execCommand(command);
     } catch (IOException e) {
-      e.printStackTrace();
       return false;
     }
     if (expectedResult == null)
@@ -86,6 +84,19 @@ public class HAProxyConfigurator {
       String r = result;
       if (result.indexOf(expectedResult) > -1)
         return true;
+    }
+    return false;
+  }
+
+  public boolean proxyConnectionStatus() {
+    boolean ok = false;
+    try {
+      ok =
+          execCommand(properties.getProperty("HAProxy.cmd.status"),
+              properties.getProperty("HAProxy.cmd.status.result"));
+      return ok;
+    } catch (Exception e) {
+      // do nothing
     }
     return false;
   }
@@ -121,12 +132,12 @@ public class HAProxyConfigurator {
 
       execCommand(cpCmd + confDir + confFile + " " + confDir + confFile + ".old", null);
 
-      System.out.println("Upload new configuration to " + confDir + confFile );
+      System.out.println("Upload new configuration to " + confDir + confFile);
       byte[] buf = lbc.toString().getBytes();
       getConnection().upload(buf, confFile, tmpDir);
 
       // mv new config to current
-      execCommand(mvCmd + tmpDir + confFile +" " +  confDir + confFile, null);
+      execCommand(mvCmd + tmpDir + confFile + " " + confDir + confFile, null);
 
       long start = System.currentTimeMillis();
       boolean failed =
@@ -166,7 +177,7 @@ public class HAProxyConfigurator {
 
   public static void main(String[] args) {
     try {
-      HAProxyConfigurator lbc = new HAProxyConfigurator(args[0]);
+      HarmonyConfigurator lbc = new HarmonyConfigurator(args[0]);
 
       for (int i = 1; i < 3; i++) {
         PaaSApplication app1 =

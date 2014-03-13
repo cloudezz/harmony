@@ -53,6 +53,7 @@ import com.cloudezz.harmony.management.paasfrontend.haproxy.impl.HAProxyRegistry
  * 
  */
 public class HAProxyConfiguration {
+  
   private static final String GLOBAL_SETTINGS = "global";
   private static final String DEFAULT_SETTINGS = "defaults";
   private static final String DEFAULT_FRONTEND = "frontend";

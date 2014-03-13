@@ -4,10 +4,10 @@
 
 	<groupId>com.cloudezz</groupId>
 	<artifactId>harmony</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>Harmony load balancer</name>
-	<description>API for type safe config and control of haproxy and stunnel</description>
+	<description>API for config and control of haproxy 1.5</description>
 
 	<build>
 		<plugins>
